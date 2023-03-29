@@ -77,7 +77,7 @@ public class ServiceClient implements ClientInterface{
         while(ok == 0) {
             varsta = scanner.nextInt();
             if (varsta < 18) {
-                System.out.println("Nu puteti angaja o persoana minora!");
+                System.out.println("Nu puteti avea un client minor!");
             } else {
                 clientNou.setVarsta(varsta);
                 ok = 1;
@@ -89,14 +89,28 @@ public class ServiceClient implements ClientInterface{
         clientNou.setNrContact(scanner.next());
 
         System.out.println("Introduceti numarul de produse pe care le-a achizitionat: ");
-        int nrProduse = scanner.nextInt();
-        Produse[] produse = new Produse[nrProduse];
-        for(int i=0; i<nrProduse; i++){
-            Produse prod = ServiceProdus.getInstance().citesteProdusInFunctieDeOpt();
-            produse[i] = prod;
-        }
+        Produse[] produse = new Produse[]{};
         clientNou.setProd(produse);
 
         return clientNou;
     }
+    public void atribuieProduseClientDupaNrContact(String nr){
+        System.out.println("Introduceti numarul de produse pe care le-a achizitionat: ");
+        int nrProduse = scanner.nextInt();
+        Client cl = new Client();
+        for(int i=0; i < clienti.size(); i++){
+            if(clienti.get(i).getNrContact().equals(nr)){
+                cl = clienti.get(i);
+            }
+        }
+        if(cl.getNrContact() != "") {
+            Produse[] produse = new Produse[nrProduse];
+            for (int i = 0; i < nrProduse; i++) {
+                Produse prod = ServiceProdus.getInstance().citesteProdusInFunctieDeOpt();
+                produse[i] = prod;
+            }
+            cl.setProd(produse);
+        }else System.out.println("Nu exista clientul cu acest numar de contact!");
+    }
+
 }

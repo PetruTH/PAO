@@ -5,21 +5,22 @@ import Produse.*;
 import Persoana.*;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.Objects;
 
 public class DealerShip {
     private String nume;
     private static int ID = 0;
-    private Client[] clienti;
-    private Angajat[] angajati;
+    private List<Client> clienti;
+    private List<Angajat> angajati;
     private Sediu sediu;
-    private Produse[] produses;
+    private List<Produse> produses;
 
     public DealerShip() {
         ID++;
     }
 
-    public DealerShip(String nume, Client[] clienti, Angajat[] angajati, Sediu sediu, Produse[] produses) {
+    public DealerShip(String nume, List<Client> clienti, List<Angajat> angajati, Sediu sediu, List<Produse> produses) {
         this.nume = nume;
         this.clienti = clienti;
         this.angajati = angajati;
@@ -39,19 +40,19 @@ public class DealerShip {
         this.nume = nume;
     }
 
-    public Client[] getClienti() {
+    public List<Client> getClienti() {
         return clienti;
     }
 
-    public void setClienti(Client[] clienti) {
+    public void setClienti(List<Client> clienti) {
         this.clienti = clienti;
     }
 
-    public Angajat[] getAngajati() {
+    public List<Angajat> getAngajati() {
         return angajati;
     }
 
-    public void setAngajati(Angajat[] angajati) {
+    public void setAngajati(List<Angajat> angajati) {
         this.angajati = angajati;
     }
 
@@ -63,11 +64,11 @@ public class DealerShip {
         this.sediu = sediu;
     }
 
-    public Produse[] getProduses() {
+    public List<Produse> getProduses() {
         return produses;
     }
 
-    public void setProduses(Produse[] produses) {
+    public void setProduses(List<Produse> produses) {
         this.produses = produses;
     }
 
@@ -75,10 +76,10 @@ public class DealerShip {
     public String toString() {
         return "DealerShip{" +
                 "nume='" + nume + '\'' +
-                ", clienti=" + Arrays.toString(clienti) +
-                ", angajati=" + Arrays.toString(angajati) +
+                ", clienti=" + clienti +
+                ", angajati=" + angajati +
                 ", sediu=" + sediu +
-                ", produses=" + Arrays.toString(produses) +
+                ", produses=" + produses +
                 ", ID=" + ID +
                 '}';
     }

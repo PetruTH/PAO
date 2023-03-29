@@ -124,7 +124,8 @@ public class MainService {
         System.out.println(" 2 - Citeste un client si insereaza-l");
         System.out.println(" 3 - Sterge un client");
         System.out.println(" 4 - Adauga un produs pt un client identificat prin numarul de telefon");
-        System.out.println(" 5 - Exit");
+        System.out.println(" 5 - Adauga mai multe produse pt un client identificat prin numarul de telefon");
+        System.out.println(" 6 - Exit");
     }
     public void MeniuClient(){
         while(true){
@@ -134,13 +135,13 @@ public class MainService {
                 String line = scanner.nextLine();
                 try {
                     opt = Integer.parseInt(line);
-                    if(opt >= 0 && opt <=5) {
+                    if(opt >= 0 && opt <=6) {
                         break;
                     } else {
-                        System.out.println("Enter a number between 0 and 5");
+                        System.out.println("Enter a number between 0 and 6");
                     }
                 } catch (Exception e){
-                    System.out.println("Enter a number between 0 and 5");
+                    System.out.println("Enter a number between 0 and 6");
                 }
             }
             if (opt == 0) {
@@ -174,7 +175,11 @@ public class MainService {
                 System.out.println("Introduceti numarul de telefon al clientului caruia doriti sa-i adaugati un produs: ");
                 String nrCautat = scanner.next();
                 ClientService.adaugaProdusPentruClient(nrCautat, ProdusService.citesteProdusInFunctieDeOpt());
-            }else if(opt==5)
+            }else if(opt==5){
+                System.out.println("Introduceti numarul de telefon al clientului caruia doriti sa-i adaugati un produs: ");
+                String nrCautat = scanner.next();
+                ClientService.atribuieProduseClientDupaNrContact(nrCautat);
+            }else if(opt==6)
                 break;
         }
     }
@@ -282,12 +287,64 @@ public class MainService {
             }
         }
     }
-    //lista de mai multe firme
-    //CRUD pe firme
-    //pt fiecare firma ai meniu separat pt sediu, client angajat
-    //implementez meniurile
-    public void meniuDealerShip(){
-
+    //intai citesti produse, sediu si angajati
+    //apoi incepi sa adaugi clienti (nu au voie sa aiba produse care nu s in lista de produse din dealership)
+    //apoi crdu pe lista de dealershipuri
+    public void printMeniuDS(){
+        System.out.println(" 0 - Afiseaza dealershipuri");
+        System.out.println(" 1 - Afiseaza un dealership identificat prin ID");
+        System.out.println(" 2 - Citeste un dealership si insereaza-l");
+        System.out.println(" 3 - Sterge un dealership");
+        System.out.println(" 4 - Adauga clienti unui dealership");
+        System.out.println(" 5 - Exit");
     }
 
+    public void meniuDealerShip() {
+        while (true) {
+            printMeniuDS();
+            int opt;
+            while (true) {
+                String line = scanner.nextLine();
+                try {
+                    opt = Integer.parseInt(line);
+                    if (opt >= 0 && opt <= 5) {
+                        break;
+                    } else {
+                        System.out.println("Enter a number between 0 and 5");
+                    }
+                } catch (Exception e) {
+                    System.out.println("Enter a number between 0 and 5");
+                }
+            }
+            if (opt == 0) {
+                int ok = 0;
+                for (int i = 0; i < DSservice.getDealerShips().size(); i++) {
+                    System.out.println(DSservice.getDealerShips().get(i));
+                    ok = +1;
+                }
+                if (ok == 0) {
+                    System.out.println("Nu exista niciun dealership momentan!");
+                }
+            } else if (opt == 1) {
+                System.out.println("Introduceti id-ul dealershipului pe care doriti sa-l cautati: ");
+                int id = scanner.nextInt();
+                if(DSservice.getDealerShipsDupaId(id) == null){
+                    System.out.println("Nu exista dealership cu acest id!");
+                }else
+                    System.out.println(DSservice.getDealerShipsDupaId(id));
+            }else if(opt==2){
+                DSservice.getDealerShips().add(DSservice.citesteDealerShip());
+            } else if (opt==3) {
+                System.out.println("Introduceti id-ul dealershipului pe care doriti sa-l stergeti: ");
+                int id = scanner.nextInt();
+                DSservice.stergeDealerShipDupaId(id);
+            } else if (opt==4) {
+                System.out.println("Introduceti id-ul dealershipului pe care doriti sa-i adaugati clienti: ");
+                int id = scanner.nextInt();
+                DSservice.citesteDealerShipClienti(id);
+            } else if (opt == 5) {
+                break;
+            }
+        }
+    }
 }

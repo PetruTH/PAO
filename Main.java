@@ -7,7 +7,7 @@ public class Main {
     public static void main(String[] args) {
 
         MainService service = MainService.getInstance();
-        service.meniuSediu();
+        service.meniuDealerShip();
 
     }
 }
