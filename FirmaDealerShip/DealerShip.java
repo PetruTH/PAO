@@ -5,32 +5,38 @@ import Produse.*;
 import Persoana.*;
 
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
 
 public class DealerShip {
     private String nume;
-    private static int ID = 0;
+    private static int IDCount = 0;
     private List<Client> clienti;
     private List<Angajat> angajati;
     private Sediu sediu;
     private List<Produse> produses;
+    private int id;
 
+    private static int generateId() {
+        return ++IDCount;
+    }
     public DealerShip() {
-        ID++;
+        this.id = generateId();
     }
 
     public DealerShip(String nume, List<Client> clienti, List<Angajat> angajati, Sediu sediu, List<Produse> produses) {
         this.nume = nume;
         this.clienti = clienti;
+        angajati.sort(Comparator.comparing(Angajat::getSalariu));
         this.angajati = angajati;
         this.sediu = sediu;
         this.produses = produses;
-        ID++;
+        this.id = generateId();
     }
 
     public int getID() {
-        return ID;
+        return id;
     }
     public String getNume() {
         return nume;
@@ -53,6 +59,7 @@ public class DealerShip {
     }
 
     public void setAngajati(List<Angajat> angajati) {
+        angajati.sort(Comparator.comparing(Angajat::getSalariu));
         this.angajati = angajati;
     }
 
@@ -80,7 +87,7 @@ public class DealerShip {
                 ", angajati=" + angajati +
                 ", sediu=" + sediu +
                 ", produses=" + produses +
-                ", ID=" + ID +
+                ", ID=" + id +
                 '}';
     }
 }

@@ -66,7 +66,7 @@ public class ServiceClient implements ClientInterface{
         Client clientNou = new Client();
 
         System.out.println("Introduceti numele: ");
-        clientNou.setNume(scanner.nextLine());
+        clientNou.setNume(scanner.next());
 
         System.out.println("Introduceti mailul: ");
         clientNou.setMail(scanner.next());

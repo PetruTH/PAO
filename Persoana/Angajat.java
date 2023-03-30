@@ -3,30 +3,33 @@ package Persoana;
 public class Angajat extends Persoana{
     private int salariu;
     private String pozitie;
-    protected static int id = 0;
-
+    protected static int idCount = 0;
+    private int id;
+    private static int generateId() {
+        return ++idCount;
+    }
     public Angajat(){
         super();
         this.salariu = 0;
         this.pozitie = "";
-        id++;
+        id = generateId();
     }
 
     public Angajat(String nume, String mail, int varsta, int salariu, String pozitie) {
         super(nume, mail, varsta);
         this.salariu = salariu;
         this.pozitie = pozitie;
-        id++;
+        id = generateId();
     }
 
     public Angajat(Persoana p, int salariu, String pozitie){
         super(p);
         this.salariu=salariu;
         this.pozitie=pozitie;
-        id++;
+        id = generateId();
     }
 
-    public static int getId() {
+    public int getId() {
         return id;
     }
 

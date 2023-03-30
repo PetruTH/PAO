@@ -46,7 +46,7 @@ public class ServiceAngajat implements AngajatInterface{
         Angajat angajatNou = new Angajat();
 //        nume mail varsta salariu pozitie
         System.out.println("Introduceti numele: ");
-        angajatNou.setNume(scanner.nextLine());
+        angajatNou.setNume(scanner.next());
 
         System.out.println("Introduceti mailul: ");
         angajatNou.setMail(scanner.next());

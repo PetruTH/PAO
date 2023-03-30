@@ -296,10 +296,16 @@ public class MainService {
         System.out.println(" 2 - Citeste un dealership si insereaza-l");
         System.out.println(" 3 - Sterge un dealership");
         System.out.println(" 4 - Adauga clienti unui dealership");
-        System.out.println(" 5 - Exit");
+        System.out.println(" 5 - Afiseaza clientii unui dealership identificat prin id");
+        System.out.println(" 6 - Adauga un angajat unui dealership identificat prin id");
+        System.out.println(" 7 - Afiseaza angajatii unui dealership identificat prin id");
+        System.out.println(" 8 - Adauga un produs unui dealership identificat prin id");
+        System.out.println(" 9 - Afiseaza produsele unui dealership identificat prin id");
+        System.out.println(" 10 - Modifica numarul de stocuri al unui sediu pentru dealership identificat prin id");
+        System.out.println(" 11 - Exit");
     }
 
-    public void meniuDealerShip() {
+    public void meniuDealerShip() throws Exception {
         while (true) {
             printMeniuDS();
             int opt;
@@ -307,13 +313,13 @@ public class MainService {
                 String line = scanner.nextLine();
                 try {
                     opt = Integer.parseInt(line);
-                    if (opt >= 0 && opt <= 5) {
+                    if (opt >= 0 && opt <= 11) {
                         break;
                     } else {
-                        System.out.println("Enter a number between 0 and 5");
+                        System.out.println("Enter a number between 0 and 11");
                     }
                 } catch (Exception e) {
-                    System.out.println("Enter a number between 0 and 5");
+                    System.out.println("Enter a number between 0 and 11");
                 }
             }
             if (opt == 0) {
@@ -331,18 +337,87 @@ public class MainService {
                 if(DSservice.getDealerShipsDupaId(id) == null){
                     System.out.println("Nu exista dealership cu acest id!");
                 }else
-                    System.out.println(DSservice.getDealerShipsDupaId(id));
+                    if (DSservice.getDealerShipsDupaId(id) != null)
+                        System.out.println(DSservice.getDealerShipsDupaId(id));
+                    else {
+                        System.out.println("Nu exista dealership cu acest id!");
+                    }
             }else if(opt==2){
                 DSservice.getDealerShips().add(DSservice.citesteDealerShip());
             } else if (opt==3) {
                 System.out.println("Introduceti id-ul dealershipului pe care doriti sa-l stergeti: ");
                 int id = scanner.nextInt();
-                DSservice.stergeDealerShipDupaId(id);
+                try {
+                    DSservice.stergeDealerShipDupaId(id);
+                }catch (Exception e){
+                    System.out.println("An error occurred: " + e.getMessage());
+                }
             } else if (opt==4) {
                 System.out.println("Introduceti id-ul dealershipului pe care doriti sa-i adaugati clienti: ");
                 int id = scanner.nextInt();
-                DSservice.citesteDealerShipClienti(id);
+                try {
+                    DSservice.citesteDealerShipClienti(id);
+                } catch (Exception e) {
+                    System.out.println("An error occurred: " + e.getMessage());
+                }
             } else if (opt == 5) {
+                int id=0;
+                System.out.println("Introduceti id-ul dealershipului: ");
+                id = scanner.nextInt();
+                try {
+                    System.out.println("Clientii dealershipului cu id-ul " + id + " sunt: ");
+
+                    DSservice.afiseazaDealerShipsClientiDupaId(id);
+                } catch (Exception e) {
+                        System.out.println("An error occurred: " + e.getMessage());
+                }
+            }else if (opt == 7) {
+                int id=0;
+                System.out.println("Introduceti id-ul dealershipului: ");
+                id = scanner.nextInt();
+                System.out.println("Andajatii dealershipului cu id-ul " + id + " sunt: ");
+                try {
+                    DSservice.afiseazaDealerShipsAngajatiDupaId(id);
+                } catch (Exception e) {
+                    System.out.println("An error occurred: " + e.getMessage());
+                }
+            }else if (opt == 6) {
+                int id=0;
+                System.out.println("Introduceti id-ul dealershipului: ");
+                id = scanner.nextInt();
+                try {
+                    DSservice.adaugaAngajatDealershipsDupaId(id);
+                } catch (Exception e) {
+                    System.out.println("An error occurred: " + e.getMessage());
+                }
+            }else if (opt == 8) {
+                int id=0;
+                System.out.println("Introduceti id-ul dealershipului: ");
+                id = scanner.nextInt();
+                try{
+                    DSservice.adaugaProduseDealershipsDupaId(id);
+                }catch (Exception e){
+                    System.out.println("An error occurred: " + e.getMessage());
+                }
+            }else if(opt==9){
+                int id=0;
+                System.out.println("Introduceti id-ul dealershipului: ");
+                id = scanner.nextInt();
+                try {
+                    DSservice.afiseazaProduseDealershipsDupaId(id);
+                } catch (Exception e) {
+                    System.out.println("An error occurred: " + e.getMessage());
+                }
+            }else if (opt == 10) {
+                int id=0;
+                System.out.println("Introduceti id-ul dealershipului: ");
+                id = scanner.nextInt();
+                try {
+                    DSservice.modificaNrStocuriDealershipsDupaId(id);
+                } catch (Exception e) {
+                    System.out.println("An error occurred: " + e.getMessage());
+                }
+            }else if (opt == 11) {
                 break;
             }
         }
