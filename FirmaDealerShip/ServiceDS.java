@@ -64,6 +64,7 @@ public class ServiceDS implements dsInterface{
             List<Client> clienti = getDealerShipsDupaId(id).getClienti();
             System.out.println("Introduceti numarul de clienti: ");
             int nrClienti = scanner.nextInt();
+            int ct=3;
             for (int i = 0; i < nrClienti; i++) {
                 Client newClient = clientService.citesteClient();
                 int nrProduse = scanner.nextInt();
@@ -83,8 +84,12 @@ public class ServiceDS implements dsInterface{
                     if(produsAdaugat == 0){
                         System.out.println("Nu exista produsul cu seria introdusa");
                         j-=1;
+                        ct-=1;
                     }else
                         System.out.println("Produsul a fost adaugat in cosul clientului");
+                    if(ct==0){
+                        return;
+                    }
                 }
                 newClient.setProd(produse);
                 clienti.add(newClient);
@@ -242,6 +247,83 @@ public class ServiceDS implements dsInterface{
             throw new Exception("Nu exista dealerShip cu id-ul " + id);
         }else{
             System.out.println("Numarul de stocuri a fost modificat in dealerShip-ul cu id-ul " + id);
+        }
+    }
+
+    @Override
+    public void stergeProduseDealershipsDupaId(int id) throws Exception {
+        int ok = 0;
+        int okDeleted = 0;
+        System.out.println("Introduceti seria produsului pe care doriti sa il stergeti");
+        String serieToDelete = scanner.next();
+        for (int i = 0; i < dealerships.size(); i++) {
+            if (dealerships.get(i).getID() == id) {
+                for(int j=0; j<dealerships.get(i).getProduses().size(); j++){
+                    if(dealerships.get(i).getProduses().get(j).getSerieFabricatie().equals(serieToDelete)){
+                        dealerships.get(i).getProduses().remove(j);
+                        okDeleted=1;
+                    }
+                }
+                ok = 1;
+            }
+        }
+        if (ok == 0) {
+            throw new Exception("Nu exista dealerShip cu id-ul " + id);
+        } else if (okDeleted == 0) {
+            throw new Exception("Nu exista produsul cu seria: " + serieToDelete + " in dealerShip-ul cu id-ul " + id);
+        }else{
+            System.out.println("Produsul cu seria: " + serieToDelete + " a fost sters din dealerShip-ul cu id-ul " + id);
+        }
+    }
+
+    @Override
+    public void stergeClientDealershipsDupaId(int id) throws Exception {
+        int ok = 0;
+        int okDeleted = 0;
+        System.out.println("Introduceti numele clientului pe care doriti sa il stergeti");
+        String numeClient = scanner.next();
+        for (int i = 0; i < dealerships.size(); i++) {
+            if (dealerships.get(i).getID() == id) {
+                for (int j = 0; j < dealerships.get(i).getClienti().size(); j++) {
+                    if (dealerships.get(i).getClienti().get(j).getNume().equals(numeClient)) {
+                        dealerships.get(i).getClienti().remove(j);
+                        okDeleted = 1;
+                    }
+                }
+                ok = 1;
+            }
+        }
+        if (ok == 0) {
+            throw new Exception("Nu exista dealerShip cu id-ul " + id);
+        } else if (okDeleted == 0) {
+            throw new Exception("Nu exista clientul cu numele: " + numeClient + " in dealerShip-ul cu id-ul " + id);
+        }else {
+            System.out.println("Clientul cu numele: " + numeClient + " a fost sters din dealerShip-ul cu id-ul " + id);
+        }
+    }
+    @Override
+    public void stergeAngajatDealershipsDupaId(int id) throws Exception {
+        int ok = 0;
+        int okDeleted = 0;
+        System.out.println("Introduceti ID-ul angajatului pe care doriti sa il stergeti");
+        int idToDelete = scanner.nextInt();
+        for (int i = 0; i < dealerships.size(); i++) {
+            if (dealerships.get(i).getID() == id) {
+                for (int j = 0; j < dealerships.get(i).getAngajati().size(); j++) {
+                    if (dealerships.get(i).getAngajati().get(j).getId() == idToDelete) {
+                        dealerships.get(i).getAngajati().remove(j);
+                        okDeleted = 1;
+                    }
+                }
+                ok = 1;
+            }
+        }
+        if (ok == 0) {
+            throw new Exception("Nu exista dealerShip cu id-ul " + id);
+        } else if (okDeleted == 0) {
+            throw new Exception("Nu exista angajatul cu id-ul: " + idToDelete + " in dealerShip-ul cu id-ul " + id);
+        }else{
+            System.out.println("Angajatul cu id-ul: " + idToDelete + " a fost sters din dealerShip-ul cu id-ul " + id);
         }
     }
 }

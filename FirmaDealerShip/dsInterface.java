@@ -14,4 +14,7 @@ public interface dsInterface {
     public void adaugaProduseDealershipsDupaId(int id) throws Exception;
     public void afiseazaProduseDealershipsDupaId(int id) throws Exception;
     public void modificaNrStocuriDealershipsDupaId(int id) throws Exception;
+    public void stergeProduseDealershipsDupaId(int id) throws Exception;
+    public void stergeClientDealershipsDupaId(int id) throws Exception;
+    public void stergeAngajatDealershipsDupaId(int id) throws Exception;
 }

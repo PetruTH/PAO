@@ -301,8 +301,11 @@ public class MainService {
         System.out.println(" 7 - Afiseaza angajatii unui dealership identificat prin id");
         System.out.println(" 8 - Adauga un produs unui dealership identificat prin id");
         System.out.println(" 9 - Afiseaza produsele unui dealership identificat prin id");
-        System.out.println(" 10 - Modifica numarul de stocuri al unui sediu pentru dealership identificat prin id");
-        System.out.println(" 11 - Exit");
+        System.out.println(" 10 - Sterge un produs identificat prin serie pentru dealership identificat prin id");
+        System.out.println(" 11 - Modifica numarul de stocuri al unui sediu pentru dealership identificat prin id");
+        System.out.println(" 12 - Sterge un angajat dealership identificat prin id");
+        System.out.println(" 13 - Sterge un client dealership identificat prin id");
+        System.out.println(" 14 - Exit");
     }
 
     public void meniuDealerShip() throws Exception {
@@ -313,13 +316,13 @@ public class MainService {
                 String line = scanner.nextLine();
                 try {
                     opt = Integer.parseInt(line);
-                    if (opt >= 0 && opt <= 11) {
+                    if (opt >= 0 && opt <= 14) {
                         break;
                     } else {
-                        System.out.println("Enter a number between 0 and 11");
+                        System.out.println("Enter a number between 0 and 14");
                     }
                 } catch (Exception e) {
-                    System.out.println("Enter a number between 0 and 11");
+                    System.out.println("Enter a number between 0 and 14");
                 }
             }
             if (opt == 0) {
@@ -408,7 +411,7 @@ public class MainService {
                 } catch (Exception e) {
                     System.out.println("An error occurred: " + e.getMessage());
                 }
-            }else if (opt == 10) {
+            }else if (opt == 11) {
                 int id=0;
                 System.out.println("Introduceti id-ul dealershipului: ");
                 id = scanner.nextInt();
@@ -417,7 +420,35 @@ public class MainService {
                 } catch (Exception e) {
                     System.out.println("An error occurred: " + e.getMessage());
                 }
-            }else if (opt == 11) {
+            }else if (opt == 10){
+                int id=0;
+                System.out.println("Introduceti id-ul dealershipului: ");
+                id = scanner.nextInt();
+                try {
+                    DSservice.stergeProduseDealershipsDupaId(id);
+                } catch (Exception e) {
+                    System.out.println("An error occurred: " + e.getMessage());
+                }
+
+            }else if (opt == 12) {
+                int id=0;
+                System.out.println("Introduceti id-ul dealershipului: ");
+                id = scanner.nextInt();
+                try {
+                    DSservice.stergeAngajatDealershipsDupaId(id);
+                } catch (Exception e) {
+                    System.out.println("An error occurred: " + e.getMessage());
+                }
+            }else if (opt == 13) {
+                int id=0;
+                System.out.println("Introduceti id-ul dealershipului: ");
+                id = scanner.nextInt();
+                try {
+                    DSservice.stergeClientDealershipsDupaId(id);
+                } catch (Exception e) {
+                    System.out.println("An error occurred: " + e.getMessage());
+                }
+            }else if (opt == 14) {
                 break;
             }
         }
