@@ -3,27 +3,46 @@ package Persoana;
 import java.util.Objects;
 
 public abstract class Persoana {
+    protected int id;
     protected String nume;
     protected String mail;
     protected int varsta;
+    protected int id_dealership;
 
     public Persoana(){
         this.nume="";
         this.mail = "";
         this.varsta = 0;
+        this.id = 0;
+        this.id_dealership = 0;
     }
-    public Persoana(String nume, String mail, int varsta) {
+    public Persoana(int id, String nume, String mail, int varsta, int id_dealership) {
         this.nume = nume;
         this.mail = mail;
         this.varsta = varsta;
+        this.id = id;
+        this.id_dealership = id_dealership;
     }
 
     public Persoana(Persoana p) {
         this.nume = p.getNume();
         this.mail = p.getMail();
         this.varsta = p.getVarsta();
+        this.id = p.getId();
+        this.id_dealership = p.getId_dealership();
     }
-
+    public void setId_dealership(int id_dealership){
+        this.id_dealership = id_dealership;
+    }
+    public int getId_dealership(){
+        return this.id_dealership;
+    }
+    public int getId() {
+        return id;
+    }
+    public void setId(int id) {
+        this.id = id;
+    }
     public void setNume(String nume) {
         this.nume = nume;
     }

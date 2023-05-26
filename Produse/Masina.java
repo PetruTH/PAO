@@ -8,8 +8,8 @@ public abstract class Masina extends Produse{
     protected int vitezaMaxima;
     protected int masa;
 
-    public Masina(String serieFabricatie, int pret, String marca, String tip, int putere, int vitezaMaxima, int masa) {
-        super(serieFabricatie, pret, marca);
+    public Masina(int serieFabricatie, int pret, String marca, int id_catre_client, int idDS, String tip, int putere, int vitezaMaxima, int masa) {
+        super(serieFabricatie, pret, marca, id_catre_client, idDS);
         this.tip = tip;
         this.putere = putere;
         this.vitezaMaxima = vitezaMaxima;

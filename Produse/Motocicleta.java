@@ -6,12 +6,15 @@ public class Motocicleta extends OffRoad{
     private int capacitateCilindrica;
     private String transmisie;
     private String tipMotocicleta;
-
+    private static String tip = "5";
     public Motocicleta(){
         super();
     }
-    public Motocicleta(String serieFabricatie, int pret, String marca, String terenSuportat, int nivelDeSiguranta, int capacitateCilindrica, String transmisie, String tipMotocicleta) {
-        super(serieFabricatie, pret, marca, terenSuportat, nivelDeSiguranta);
+    public String getTip() {
+        return tip;
+    }
+    public Motocicleta(int serieFabricatie, int pret, String marca,int id_catre_client, int idDS, String terenSuportat, int nivelDeSiguranta, int capacitateCilindrica, String transmisie, String tipMotocicleta) {
+        super(serieFabricatie, pret, marca,id_catre_client, idDS, terenSuportat, nivelDeSiguranta);
         this.capacitateCilindrica = capacitateCilindrica;
         this.transmisie = transmisie;
         this.tipMotocicleta = tipMotocicleta;

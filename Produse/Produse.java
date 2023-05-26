@@ -3,26 +3,52 @@ package Produse;
 import java.util.Objects;
 
 public abstract class Produse {
-    protected String serieFabricatie;
+    protected int serieFabricatie;
     protected int pret;
     protected String marca;
+    protected int id_catre_client;
+    protected int idDS;
+
+    public String getTip() {
+        return null;
+    }
 
     public Produse(){
-        this.serieFabricatie = "";
+        this.serieFabricatie = 0;
         this.pret = 0;
         this.marca = "";
+        this.id_catre_client = 0;
     }
-    public Produse(String serieFabricatie, int pret, String marca) {
+    public Produse(int serieFabricatie, int pret, String marca, int id_catre_client, int idDS) {
         this.serieFabricatie = serieFabricatie;
         this.pret = pret;
         this.marca = marca;
+        this.id_catre_client = id_catre_client;
+        this.idDS = idDS;
     }
 
     public Produse(Produse p){
         this.serieFabricatie = p.getSerieFabricatie();
         this.pret = p.getPret();
+        this.marca = p.getMarca();
+        this.id_catre_client = p.getId_catre_client();
+        this.idDS = p.getIdDS();
     }
 
+    public int getIdDS() {
+        return idDS;
+    }
+
+    public void setIdDS(int idDS) {
+        this.idDS = idDS;
+    }
+
+    public int getId_catre_client() {
+        return id_catre_client;
+    }
+    public void setId_catre_client(int id_catre_client) {
+        this.id_catre_client = id_catre_client;
+    }
 
     public String getMarca() {
         return marca;
@@ -32,11 +58,11 @@ public abstract class Produse {
         return pret;
     }
 
-    public String getSerieFabricatie() {
+    public int getSerieFabricatie() {
         return serieFabricatie;
     }
 
-    public void setSerieFabricatie(String serieFabricatie) {
+    public void setSerieFabricatie(int serieFabricatie) {
         this.serieFabricatie = serieFabricatie;
     }
 
@@ -57,7 +83,7 @@ public abstract class Produse {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Produse produse = (Produse) o;
-        return pret == produse.pret && serieFabricatie.equals(produse.serieFabricatie) && marca.equals(produse.marca);
+        return pret == produse.pret && serieFabricatie == produse.serieFabricatie && marca.equals(produse.marca);
     }
 
     @Override

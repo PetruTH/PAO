@@ -5,16 +5,18 @@ import java.util.Objects;
 public class ATV extends OffRoad{
     private int autonomie;
     private String tractiune;
-
+    private static String tip = "4";
     public ATV(){
         super();
     }
-    public ATV(String serieFabricatie, int pret, String marca, String terenSuportat, int nivelDeSiguranta, int autonomie, String tractiune) {
-        super(serieFabricatie,pret, marca, terenSuportat, nivelDeSiguranta);
+    public ATV(int serieFabricatie, int pret, String marca, int id_catre_client, int idDS, String terenSuportat, int nivelDeSiguranta, int autonomie, String tractiune) {
+        super(serieFabricatie,pret, marca, id_catre_client, idDS, terenSuportat, nivelDeSiguranta);
         this.autonomie = autonomie;
         this.tractiune = tractiune;
     }
-
+    public String getTip(){
+        return tip;
+    }
     public ATV(Produse p, String terenSuportat, int nivelDeSiguranta, int autonomie, String tractiune) {
         super(p, terenSuportat, nivelDeSiguranta);
         this.autonomie = autonomie;

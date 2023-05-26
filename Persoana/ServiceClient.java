@@ -1,68 +1,48 @@
 package Persoana;
 
 import Produse.*;
+import Repos.*;
+
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
 public class ServiceClient implements ClientInterface{
-    private List<Client> clienti = new ArrayList<>();
-    private static ServiceClient instance;
+
+    private final DealerShipRepo dealerShipRepovar = DealerShipRepo.getInit();
+    private final clientRepo clientRepovar = clientRepo.getInit();
     Scanner scanner = new Scanner(System.in);
-    public ServiceClient() {
-
-    }
-    public static ServiceClient getInstance(){
-        if(instance == null){
-            instance = new ServiceClient();
-        }
-        return instance;
-    }
-
     @Override
     public List<Client> getClienti() {
-        return this.clienti;
+        return clientRepovar.findall();
     }
 
     @Override
-    public Client afiseazaClientDupaNrContact(String nr) {
-        for(int i=0; i < clienti.size(); i++){
-            if(clienti.get(i).getNrContact().equals(nr)){
-                return clienti.get(i);
-            }
-        }
-        return null;
+    public Client afiseazaClientDupaID(int nr) throws SQLException {
+        return clientRepovar.findOneClient(nr);
     }
 
     @Override
-    public void stergeClientDupaNrContact(String nr) {
-        for(int i=0; i < clienti.size(); i++){
-            if(clienti.get(i).getNrContact().equals(nr)){
-                clienti.remove(i);
-            }
-        }
+    public void stergeClientDupaID(int nr) {
+        clientRepovar.delete(nr);
     }
 
     @Override
-    public void adaugaProdusPentruClient(String nr, Produse produs) {
-        Produse[] prod = new Produse[]{};
-        Client cl = new Client();
-        for(int i=0; i < clienti.size(); i++){
-            if(clienti.get(i).getNrContact().equals(nr)){
-                prod = clienti.get(i).getProd();
-                cl = clienti.get(i);
-            }
-        }
-        Produse[] prodNou = new Produse[prod.length + 1];
-        for(int i=0; i<prod.length; i++){
-            prodNou[i] = prod[i];
-        }
-        prodNou[prod.length] = produs;
-        cl.setProd(prodNou);
+    public void seteazaProduseClientuluiDupaID(int nr, String produs) throws SQLException {
+        clientRepovar.updateProduse(nr, produs);
     }
-
+    public void printID_produse(){
+        System.out.println("Format pt produse: ID_PRODUS[CATEGORIE_PRODUS]");
+        System.out.println("Categorie masina combustibili fosili: 1");
+        System.out.println("Categorie masina electrica: 2");
+        System.out.println("Categorie masina hibrida: 3");
+        System.out.println("Categorie ATV: 4");
+        System.out.println("Categorie motocicleta: 5");
+        System.out.println("Categorie bicicleta: 6");
+    }
     @Override
-    public Client citesteClient() {
+    public Client citesteClient() throws SQLException {
         Client clientNou = new Client();
 
         System.out.println("Introduceti numele: ");
@@ -85,32 +65,31 @@ public class ServiceClient implements ClientInterface{
         }
         clientNou.setVarsta(varsta);
 
-        System.out.println("Introduceti numarul de telefon: ");
-        clientNou.setNrContact(scanner.next());
+        System.out.println("Introduceti ID-ul dealershipului de la care cumpara acest client: ");
+        int id_DS = scanner.nextInt();
+        clientNou.setId_dealership(id_DS);
 
-        System.out.println("Introduceti numarul de produse pe care le-a achizitionat: ");
-        Produse[] produse = new Produse[]{};
-        clientNou.setProd(produse);
+        System.out.println("Introduceti ID ul: ");
+        clientNou.setId(scanner.nextInt());
 
+        printID_produse();
+        String produse_disponibile = dealerShipRepovar.getProduseFromDealerShipByID(id_DS);
+        System.out.println("Produsele disponibile sunt: " + produse_disponibile);
+
+        System.out.println("Introduceti numarul produselor pe care le cumpara clientul:");
+        int nrProd = scanner.nextInt();
+        while(nrProd > 0){
+            System.out.println("Introduceti ID-ul si tipul produsului pe care il cumpara clientul: ");
+            String produs = scanner.next();
+            if (produse_disponibile.contains(produs) == false){
+                System.out.println("Produsul nu este disponibil!");
+                continue;
+            }
+            clientNou.setProd(produs);
+            nrProd--;
+        }
+
+        clientRepovar.save(clientNou);
         return clientNou;
     }
-    public void atribuieProduseClientDupaNrContact(String nr){
-        System.out.println("Introduceti numarul de produse pe care le-a achizitionat: ");
-        int nrProduse = scanner.nextInt();
-        Client cl = new Client();
-        for(int i=0; i < clienti.size(); i++){
-            if(clienti.get(i).getNrContact().equals(nr)){
-                cl = clienti.get(i);
-            }
-        }
-        if(cl.getNrContact() != "") {
-            Produse[] produse = new Produse[nrProduse];
-            for (int i = 0; i < nrProduse; i++) {
-                Produse prod = ServiceProdus.getInstance().citesteProdusInFunctieDeOpt();
-                produse[i] = prod;
-            }
-            cl.setProd(produse);
-        }else System.out.println("Nu exista clientul cu acest numar de contact!");
-    }
-
 }

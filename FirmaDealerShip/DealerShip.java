@@ -11,28 +11,27 @@ import java.util.Objects;
 
 public class DealerShip {
     private String nume;
-    private static int IDCount = 0;
-    private List<Client> clienti;
-    private List<Angajat> angajati;
-    private Sediu sediu;
-    private List<Produse> produses;
+    private String clienti;
+    private String angajati;
+    private int sediu;
+    private String produses;
     private int id;
 
-    private static int generateId() {
-        return ++IDCount;
-    }
     public DealerShip() {
-        this.id = generateId();
+        this.id = 0;
     }
 
-    public DealerShip(String nume, List<Client> clienti, List<Angajat> angajati, Sediu sediu, List<Produse> produses) {
+    public DealerShip(int id, String nume, String clienti, String angajati, int sediu, String produses) {
         this.nume = nume;
         this.clienti = clienti;
-        angajati.sort(Comparator.comparing(Angajat::getSalariu));
         this.angajati = angajati;
         this.sediu = sediu;
         this.produses = produses;
-        this.id = generateId();
+        this.id = id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public int getID() {
@@ -46,36 +45,36 @@ public class DealerShip {
         this.nume = nume;
     }
 
-    public List<Client> getClienti() {
+    public String getClienti() {
         return clienti;
     }
 
-    public void setClienti(List<Client> clienti) {
+    public void setClienti(String clienti) {
         this.clienti = clienti;
     }
 
-    public List<Angajat> getAngajati() {
+    public String getAngajati() {
         return angajati;
     }
 
-    public void setAngajati(List<Angajat> angajati) {
-        angajati.sort(Comparator.comparing(Angajat::getSalariu));
+    public void setAngajati(String angajati) {
+//        angajati.sort(Comparator.comparing(Angajat::getSalariu));
         this.angajati = angajati;
     }
 
-    public Sediu getSediu() {
+    public int getSediu() {
         return sediu;
     }
 
-    public void setSediu(Sediu sediu) {
+    public void setSediu(int sediu) {
         this.sediu = sediu;
     }
 
-    public List<Produse> getProduses() {
+    public String getProduses() {
         return produses;
     }
 
-    public void setProduses(List<Produse> produses) {
+    public void setProduses(String produses) {
         this.produses = produses;
     }
 

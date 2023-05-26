@@ -6,12 +6,13 @@ public class Bicicleta extends OffRoad{
     private int masa;
     private int nrViteze;
     private String materialCadru;
+    private static String tip = "6";
 
     public Bicicleta(){
         super();
     }
-    public Bicicleta(String serieFabricatie, int pret, String marca, String terenSuportat, int nivelDeSiguranta, int masa, int nrViteze, String materialCadru) {
-        super(serieFabricatie, pret, marca, terenSuportat, nivelDeSiguranta);
+    public Bicicleta(int serieFabricatie, int pret, String marca,  int id_catre_client, int idDS, String terenSuportat, int nivelDeSiguranta, int masa, int nrViteze, String materialCadru) {
+        super(serieFabricatie, pret, marca, id_catre_client, idDS, terenSuportat, nivelDeSiguranta);
         this.masa = masa;
         this.nrViteze = nrViteze;
         this.materialCadru = materialCadru;
@@ -60,6 +61,10 @@ public class Bicicleta extends OffRoad{
         if (!super.equals(o)) return false;
         Bicicleta bicicleta = (Bicicleta) o;
         return masa == bicicleta.masa && nrViteze == bicicleta.nrViteze && materialCadru.equals(bicicleta.materialCadru);
+    }
+
+    public String getTip(){
+        return tip;
     }
 
     @Override

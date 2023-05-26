@@ -1,50 +1,39 @@
 package Persoana;
 
+import java.sql.SQLException;
 import java.util.Scanner;
 import java.util.ArrayList;
 import java.util.List;
+import Repos.*;
 
 public class ServiceAngajat implements AngajatInterface{
     private List<Angajat> angajati = new ArrayList<>();
-    private static ServiceAngajat instance;
-    Scanner scanner = new Scanner(System.in);
-    public ServiceAngajat() {
 
-    }
-    public static ServiceAngajat getInstance(){
-        if(instance == null){
-            instance = new ServiceAngajat();
-        }
-        return instance;
-    }
+    private final angajatRepo angajatRepovar = angajatRepo.getInit();
+    Scanner scanner = new Scanner(System.in);
+
     @Override
     public List<Angajat> getAngajati() {
-        return this.angajati;
+        return angajatRepovar.findall();
     }
 
     @Override
-    public Angajat getAngajatByID(int idAngajat) {
-        for(int i=0; i < angajati.size(); i++){
-            if(i+1==idAngajat){
-                return this.angajati.get(i);
-            }
-        }
-        return null;
+    public Angajat getAngajatByID(int idAngajat) throws SQLException {
+        return angajatRepovar.findOneAngajat(idAngajat);
     }
 
     @Override
     public void deleteAngajatByID(int idAngajat) {
-        for(int i=0; i<this.angajati.size(); i++){
-            if(i+1 == idAngajat){
-                this.angajati.remove(i);
-            }
-        }
+        angajatRepovar.delete(idAngajat);
     }
 
     @Override
     public Angajat citesteAngajat() {
         Angajat angajatNou = new Angajat();
 //        nume mail varsta salariu pozitie
+        System.out.println("Introduceti id-ul: ");
+        angajatNou.setId(scanner.nextInt());
+
         System.out.println("Introduceti numele: ");
         angajatNou.setNume(scanner.next());
 
@@ -69,10 +58,14 @@ public class ServiceAngajat implements AngajatInterface{
         }
         angajatNou.setVarsta(varsta);
 
+        System.out.println("Introduceti ID-ul dealershipului pentru care lucreaza acest angajat: ");
+        int id_DS = scanner.nextInt();
+        angajatNou.setId_dealership(id_DS);
+
         System.out.println("Introduceti salariul: ");
         angajatNou.setSalariu(scanner.nextInt());
 
-        
+        angajatRepovar.save(angajatNou);
         return angajatNou;
     }
 }

@@ -1,278 +1,223 @@
 package FirmaDealerShip;
 import Persoana.*;
+import Repos.DealerShipRepo;
 import Sediu.*;
 import Produse.*;
 
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Scanner;
+import java.sql.SQLException;
+import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class ServiceDS implements dsInterface{
+
+    private DealerShipRepo dealerShipRepoVar = DealerShipRepo.getInit();
     private List<DealerShip> dealerships = new ArrayList<>();
+    private ServiceProdus produseService = new ServiceProdus();
+    private ServiceAngajat angajatiService = new ServiceAngajat();
+    private ServiceClient clientiService = new ServiceClient();
+    private ServiceSediu sediuService = new ServiceSediu();
     Scanner scanner = new Scanner(System.in);
-    private static ServiceDS instance = null;
-    private ServiceDS() {
-    }
-    public static ServiceDS getInstance() {
-        if (instance == null) {
-            instance = new ServiceDS();
-        }
-        return instance;
-    }
+
     @Override
-    public DealerShip citesteDealerShip() {
-        ServiceProdus prodService = ServiceProdus.getInstance();
-        ServiceAngajat angService = ServiceAngajat.getInstance();
-        ServiceClient clientService = ServiceClient.getInstance();
-        ServiceSediu sediuService = ServiceSediu.getInstance();
+    public DealerShip citesteDealerShip() throws Exception {
+        DealerShip ds = new DealerShip();
+
+        System.out.println("Introduceti ID-ul dealerShip-ului: ");
+        int id = scanner.nextInt();
 
         System.out.println("Introduceti numele dealerShip-ului: ");
         String nume = scanner.next();
-        System.out.println("Introduceti numarul de angajati: ");
-        int nrAngajati = scanner.nextInt();
 
-        List<Angajat> angajati = new ArrayList<>();
-        for (int i = 0; i < nrAngajati; i++) {
-            angajati.add(angService.citesteAngajat());
-        }
+        System.out.println("Introduceti angajatii (format ID_ANGAJAT,ID_ANGAJAT) sau 0 daca nu exista");
+        String angajati = scanner.next();
 
-        System.out.println("Introduceti numarul de produse: ");
-        int nrProduse = scanner.nextInt();
-        List<Produse> produse = new ArrayList<>();
-        for (int i = 0; i < nrProduse; i++) {
-            produse.add(prodService.citesteProdusInFunctieDeOpt());
-        }
+        System.out.println("Introduceti clientii (format ID_ANGAJAT,ID_ANGAJAT) sau 0 daca nu exista");
+        String clienti = scanner.next();
 
-        List<Client> clienti = new ArrayList<>();
-        DealerShip ds = new DealerShip();
+        System.out.println("Introduceti sediul (format ID_SEDIU) sau 0 daca nu exista");
+        int sediu = scanner.nextInt();
+
+        System.out.println("Introduceti produsele (format ID_PRODUS,ID_PRODUS) sau 0 daca nu exista");
+        String produse = scanner.next();
+
+        ds.setId(id);
+        ds.setProduses(produse);
+        ds.setSediu(sediu);
         ds.setNume(nume);
         ds.setAngajati(angajati);
-        ds.setProduses(produse);
         ds.setClienti(clienti);
-        ds.setSediu(sediuService.citesteSediu());
+        dealerShipRepoVar.add(ds);
         return ds;
-    }
-
-    public void citesteDealerShipClienti(int id) throws Exception {
-        int ok=1;
-        ServiceClient clientService = ServiceClient.getInstance();
-        if(getDealerShipsDupaId(id) == null) {
-            System.out.println("Nu exista dealerShip cu id-ul respectiv");
-            ok=0;
-        }else {
-            List<Client> clienti = getDealerShipsDupaId(id).getClienti();
-            System.out.println("Introduceti numarul de clienti: ");
-            int nrClienti = scanner.nextInt();
-            int ct=3;
-            for (int i = 0; i < nrClienti; i++) {
-                Client newClient = clientService.citesteClient();
-                int nrProduse = scanner.nextInt();
-                Produse[] produse = new Produse[nrProduse];
-                for(int j=0; j < nrProduse; j++) {
-                    System.out.println("Introduceti seria produsului: ");
-                    String serie = scanner.next();
-                    int produsAdaugat = 0;
-                    List<Produse> prodDeVerificat = new ArrayList<>();
-                    prodDeVerificat = getDealerShipsDupaId(id).getProduses();
-                    for (int k = 0; k < prodDeVerificat.size(); k++) {
-                        if(prodDeVerificat.get(k).getSerieFabricatie().equals(serie)) {
-                            produse[j] = prodDeVerificat.get(k);
-                            produsAdaugat = 1;
-                        }
-                    }
-                    if(produsAdaugat == 0){
-                        System.out.println("Nu exista produsul cu seria introdusa");
-                        j-=1;
-                        ct-=1;
-                    }else
-                        System.out.println("Produsul a fost adaugat in cosul clientului");
-                    if(ct==0){
-                        return;
-                    }
-                }
-                newClient.setProd(produse);
-                clienti.add(newClient);
-
-            }
-            getDealerShipsDupaId(id).setClienti(clienti);
-        }
-        if(ok==0){
-            throw new Exception("Nu exista dealerShip cu id-ul " + id);
-        }else {
-            System.out.println("Clientii au fost adaugati in dealerShip-ul cu id-ul " + id);
-        }
     }
 
     @Override
     public List<DealerShip> getDealerShips() {
-        return this.dealerships;
+        return dealerShipRepoVar.findall();
     }
 
     @Override
     public void stergeDealerShipDupaId(int id) throws Exception {
-        int ok=0;
-        for (int i = 0; i < dealerships.size(); i++) {
-            if (dealerships.get(i).getID() == id) {
-                dealerships.remove(i);
-                ok=1;
-            }
-        }
-        if(ok==0){
-            throw new Exception("Nu exista dealerShip cu id-ul " + id);
-        }else {
-            System.out.println("DealerShip-ul cu id-ul " + id + " a fost sters");
-        }
+        dealerShipRepoVar.delete(id);
     }
 
     @Override
-    public DealerShip getDealerShipsDupaId(int id) {
-        for (int i = 0; i < dealerships.size(); i++) {
-            if (dealerships.get(i).getID() == id) {
-                return (dealerships.get(i));
-            }
+    public DealerShip getDealerShipsDupaId(int id) throws SQLException {
+        DealerShip d = dealerShipRepoVar.findOneDealerShip(id);
+        if (d == null) {
+            System.out.println("Nu exista dealerShip cu id-ul " + id);
+            return null;
         }
-        return null;
+        return d;
     }
 
     @Override
     public void afiseazaDealerShipsClientiDupaId(int id) throws Exception {
-        int ok=0;
-        int okClienti=0;
-        for (int i = 0; i < dealerships.size(); i++) {
-            if (dealerships.get(i).getID() == id) {
-                for(int j=0; j<dealerships.get(i).getClienti().size(); j++){
-                    okClienti=1;
-                    System.out.println(dealerships.get(i).getClienti().get(j).toString());
-                }
-                ok=1;
-            }
+        if(dealerShipRepoVar.getClientiFromDealerShipByID(id).equals("0")){
+            System.out.println("Nu exista clienti in dealerShip-ul cu id-ul " + id);
+            return;
         }
-        if(ok==0){
-            throw new Exception("Nu exista dealerShip cu id-ul " + id);
-        }else if(okClienti==0){
-            throw new Exception("Nu exista clienti in dealerShip-ul cu id-ul " + id);
+        String[] parts = dealerShipRepoVar.getClientiFromDealerShipByID(id).split(",");
+        for(int i=0; i<parts.length; i++){
+            System.out.println(clientiService.afiseazaClientDupaID(Integer.parseInt(parts[i])));
         }
     }
 
     @Override
     public void afiseazaDealerShipsAngajatiDupaId(int id) throws Exception {
+        if(dealerShipRepoVar.getAngajatiFromDealerShipByID(id).equals("0")){
+            System.out.println("Nu exista angajati in dealerShip-ul cu id-ul " + id);
+            return;
+        }
+        String[] parts = dealerShipRepoVar.getAngajatiFromDealerShipByID(id).split(",");
+        for(int i=0; i<parts.length; i++){
+            System.out.println(angajatiService.getAngajatByID(Integer.parseInt(parts[i])));
+        }
+    }
+
+    public void adaugaClientDealershipsDupaId(int id) throws SQLException {
         int ok=0;
-        int okAngajati=0;
-        for (int i = 0; i < dealerships.size(); i++) {
-            if (dealerships.get(i).getID() == id) {
-                for(int j=0; j<dealerships.get(i).getAngajati().size(); j++){
-                    okAngajati=1;
-                    System.out.println(dealerships.get(i).getAngajati().get(j).toString());
-                }
-                ok=1;
-            }
+        String old_clienti = dealerShipRepoVar.getClientiFromDealerShipByID(id);
+
+        System.out.println("Din acest dealership pot fi achizitonate urmatoarele produse: ");
+        System.out.println(dealerShipRepoVar.getProduseFromDealerShipByID(id));
+
+        Client newClient = clientiService.citesteClient();
+
+        if (old_clienti.equals("0")) {
+            dealerShipRepoVar.updateClientiFromDealerShipByID(id, String.valueOf(newClient.getId()));
+        } else {
+            dealerShipRepoVar.updateClientiFromDealerShipByID(id, old_clienti + "," + newClient.getId());
         }
-        if (ok == 0) {
-            throw new Exception("Nu exista dealerShip cu id-ul " + id);
-        } else if (okAngajati == 0) {
-            throw new Exception("Nu exista angajati in dealerShip-ul cu id-ul " + id);
-        }
+
     }
 
     @Override
     public void adaugaAngajatDealershipsDupaId(int id) throws Exception {
         int ok=0;
-        for (int i = 0; i < dealerships.size(); i++) {
-            if (dealerships.get(i).getID() == id) {
-                dealerships.get(i).getAngajati().add(ServiceAngajat.getInstance().citesteAngajat());
-                dealerships.get(i).getAngajati().sort(Comparator.comparing(Angajat::getSalariu));
-                ok=1;
-            }
-            }
-        if (ok==0){
-            throw new Exception("Nu exista dealerShip cu id-ul " + id);
-        }else{
-            System.out.println("Angajatul a fost adaugat in dealerShip-ul cu id-ul " + id);
+        String old_angajati = dealerShipRepoVar.getAngajatiFromDealerShipByID(id);
+
+        Angajat newAngajat = angajatiService.citesteAngajat();
+
+
+        if (old_angajati.equals("0")) {
+            dealerShipRepoVar.updateAngajatiFromDealerShipByID(id, String.valueOf(newAngajat.getId()));
+        } else {
+            dealerShipRepoVar.updateAngajatiFromDealerShipByID(id, old_angajati + "," + newAngajat.getId());
         }
     }
 
     @Override
     public void adaugaProduseDealershipsDupaId(int id) throws Exception {
         int ok=0;
-        for (int i = 0; i < dealerships.size(); i++) {
-            if (dealerships.get(i).getID() == id) {
-                if(dealerships.get(i).getProduses().size() < dealerships.get(i).getSediu().getNrStocuri()){
-                    dealerships.get(i).getProduses().add(ServiceProdus.getInstance().citesteProdusInFunctieDeOpt());
-                }else{
-                    throw new Exception("Nu mai exista spatiu in stoc");
-                }
-            }
-            ok=1;
+        String old_produse = dealerShipRepoVar.getProduseFromDealerShipByID(id);
+        if (old_produse.split(",").length >= sediuService.afiseazaSediuDupaID(dealerShipRepoVar.getSediuFromDealerShipByID(id)).getNrStocuri()) {
+            System.out.println("Nu se mai pot adauga produse");
+            return;
         }
-        if (ok==0){
-            throw new Exception("Nu exista dealerShip cu id-ul " + id);
-        }else{
-            System.out.println("Produsul a fost adaugat in dealerShip-ul cu id-ul " + id);
+
+        Produse newProdus = produseService.citesteProdusInFunctieDeOpt();
+
+        if (old_produse.equals("0")) {
+            dealerShipRepoVar.updateProduseFromDealerShipByID(id, String.valueOf(newProdus.getSerieFabricatie()) + "[" + newProdus.getTip() + "]" );
+        } else {
+            dealerShipRepoVar.updateProduseFromDealerShipByID(id, old_produse + "," + String.valueOf(newProdus.getSerieFabricatie()) + "[" + newProdus.getTip() + "]" );
         }
+
     }
 
     @Override
     public void afiseazaProduseDealershipsDupaId(int id) throws Exception {
-        int ok=0;
-        int okProduse=0;
-        for (int i = 0; i < dealerships.size(); i++) {
-            if (dealerships.get(i).getID() == id) {
-                for(int j=0; j<dealerships.get(i).getProduses().size(); j++){
-                    okProduse=1;
-                    System.out.println(dealerships.get(i).getProduses().get(j).toString());
-                }
-                ok=1;
-            }
+        List<Integer> integers = new ArrayList<>();
+
+        Pattern pattern = Pattern.compile("\\d+");
+        Matcher matcher = pattern.matcher(dealerShipRepoVar.getProduseFromDealerShipByID(id));
+
+        while (matcher.find()) {
+            int number = Integer.parseInt(matcher.group());
+            integers.add(number);
         }
-        if (ok == 0) {
-            throw new Exception("Nu exista dealerShip cu id-ul " + id);
-        } else if (okProduse == 0) {
-            throw new Exception("Nu exista produse in dealerShip-ul cu id-ul " + id);
+
+        for(int i=0; i<integers.size(); i+=2){
+            int idProdus = integers.get(i);
+            int tipProdus = integers.get(i+1);
+            System.out.println(produseService.getProdusBySeriedeFabricatie(idProdus, tipProdus));
         }
     }
 
+    public void afiseazaSediuDealershipsDupaId(int id) throws Exception {
+        System.out.println(sediuService.afiseazaSediuDupaID(dealerShipRepoVar.getSediuFromDealerShipByID(id)));
+    }
     @Override
     public void modificaNrStocuriDealershipsDupaId(int id) throws Exception {
-        int ok=0;
-        for (int i = 0; i < dealerships.size(); i++) {
-            if (dealerships.get(i).getID() == id) {
-                System.out.println("Introduceti numarul de stocuri dorit");
-                int nrStocuri = scanner.nextInt();
-                dealerships.get(i).getSediu().setNrStocuri(nrStocuri);
-                ok=1;
-            }
-        }
-        if (ok==0){
-            throw new Exception("Nu exista dealerShip cu id-ul " + id);
-        }else{
-            System.out.println("Numarul de stocuri a fost modificat in dealerShip-ul cu id-ul " + id);
-        }
+        int ok = 0;
+
+        System.out.println("Introduceti noul numar de stocuri");
+        int new_nr_stocuri = scanner.nextInt();
+        int id_sediu = dealerShipRepoVar.getSediuFromDealerShipByID(id);
+
+        sediuService.updateNrStocuriSediuByID(id_sediu, new_nr_stocuri);
+
     }
 
     @Override
     public void stergeProduseDealershipsDupaId(int id) throws Exception {
         int ok = 0;
         int okDeleted = 0;
-        System.out.println("Introduceti seria produsului pe care doriti sa il stergeti");
-        String serieToDelete = scanner.next();
-        for (int i = 0; i < dealerships.size(); i++) {
-            if (dealerships.get(i).getID() == id) {
-                for(int j=0; j<dealerships.get(i).getProduses().size(); j++){
-                    if(dealerships.get(i).getProduses().get(j).getSerieFabricatie().equals(serieToDelete)){
-                        dealerships.get(i).getProduses().remove(j);
-                        okDeleted=1;
-                    }
-                }
-                ok = 1;
+        System.out.println("Introduceti ID-ul produsului pe care doriti sa il stergeti");
+        int idToDelete = scanner.nextInt();
+
+        System.out.println("Introduceti tipul produsului pe care doriti sa il stergeti");
+        String tip_to_delete = scanner.next();
+
+        String old_produse = dealerShipRepoVar.getProduseFromDealerShipByID(id);
+        String[] parts = old_produse.split(",");
+        for (int i = 0; i < parts.length; i++) {
+            String for_delete = idToDelete + "[" + tip_to_delete + "]";
+            if (parts[i].equals(for_delete)) {
+                okDeleted = 1;
+                parts[i] = "";
             }
         }
-        if (ok == 0) {
-            throw new Exception("Nu exista dealerShip cu id-ul " + id);
-        } else if (okDeleted == 0) {
-            throw new Exception("Nu exista produsul cu seria: " + serieToDelete + " in dealerShip-ul cu id-ul " + id);
-        }else{
-            System.out.println("Produsul cu seria: " + serieToDelete + " a fost sters din dealerShip-ul cu id-ul " + id);
+
+        if (okDeleted == 0) {
+            throw new Exception("Produsul pe care doriti sa-l stergeti nu exista " + idToDelete);
+        } else {
+            String new_produse = "";
+            if (parts[0].equals("") && parts.length==1) {
+                new_produse = "0";
+            } else {
+                for (int i = 0; i < parts.length; i++) {
+                    if (!parts[i].equals("")) {
+                        if (new_produse.equals("")) {
+                            new_produse = parts[i];
+                        } else {
+                            new_produse = new_produse + "," + parts[i];
+                        }
+                    }
+                }
+            }
+            dealerShipRepoVar.updateProduseFromDealerShipByID(id, new_produse);
         }
     }
 
@@ -280,50 +225,65 @@ public class ServiceDS implements dsInterface{
     public void stergeClientDealershipsDupaId(int id) throws Exception {
         int ok = 0;
         int okDeleted = 0;
-        System.out.println("Introduceti numele clientului pe care doriti sa il stergeti");
-        String numeClient = scanner.next();
-        for (int i = 0; i < dealerships.size(); i++) {
-            if (dealerships.get(i).getID() == id) {
-                for (int j = 0; j < dealerships.get(i).getClienti().size(); j++) {
-                    if (dealerships.get(i).getClienti().get(j).getNume().equals(numeClient)) {
-                        dealerships.get(i).getClienti().remove(j);
-                        okDeleted = 1;
-                    }
-                }
-                ok = 1;
+        System.out.println("Introduceti ID-ul clientului pe care doriti sa il stergeti");
+        int idToDelete = scanner.nextInt();
+        String old_clienti = dealerShipRepoVar.getClientiFromDealerShipByID(id);
+        String[] parts = old_clienti.split(",");
+        for (int i = 0; i < parts.length; i++) {
+            if (Integer.parseInt(parts[i]) == idToDelete) {
+                okDeleted = 1;
+                parts[i] = "";
             }
         }
-        if (ok == 0) {
-            throw new Exception("Nu exista dealerShip cu id-ul " + id);
-        } else if (okDeleted == 0) {
-            throw new Exception("Nu exista clientul cu numele: " + numeClient + " in dealerShip-ul cu id-ul " + id);
-        }else {
-            System.out.println("Clientul cu numele: " + numeClient + " a fost sters din dealerShip-ul cu id-ul " + id);
+
+        if (okDeleted == 0) {
+            throw new Exception("Nu exista angajat cu id-ul " + idToDelete);
+        } else {
+            String new_clienti = "";
+            if (parts[0].equals("") && parts.length==1) {
+                new_clienti = "0";
+            }else {
+                for (int i = 0; i < parts.length; i++) {
+                    if (!parts[i].equals("")) {
+                        new_clienti += parts[i] + ",";
+                    }
+                }
+            }
+            String new_clienti_added = new_clienti.substring(0, new_clienti.length() - 1);
+            dealerShipRepoVar.updateClientiFromDealerShipByID(id, new_clienti_added);
         }
     }
+
     @Override
     public void stergeAngajatDealershipsDupaId(int id) throws Exception {
         int ok = 0;
         int okDeleted = 0;
         System.out.println("Introduceti ID-ul angajatului pe care doriti sa il stergeti");
         int idToDelete = scanner.nextInt();
-        for (int i = 0; i < dealerships.size(); i++) {
-            if (dealerships.get(i).getID() == id) {
-                for (int j = 0; j < dealerships.get(i).getAngajati().size(); j++) {
-                    if (dealerships.get(i).getAngajati().get(j).getId() == idToDelete) {
-                        dealerships.get(i).getAngajati().remove(j);
-                        okDeleted = 1;
-                    }
-                }
-                ok = 1;
+        String old_angajati = dealerShipRepoVar.getAngajatiFromDealerShipByID(id);
+        String[] parts = old_angajati.split(",");
+        for (int i = 0; i < parts.length; i++) {
+            if (Integer.parseInt(parts[i]) == idToDelete) {
+                okDeleted = 1;
+                parts[i] = "";
             }
         }
-        if (ok == 0) {
-            throw new Exception("Nu exista dealerShip cu id-ul " + id);
-        } else if (okDeleted == 0) {
-            throw new Exception("Nu exista angajatul cu id-ul: " + idToDelete + " in dealerShip-ul cu id-ul " + id);
-        }else{
-            System.out.println("Angajatul cu id-ul: " + idToDelete + " a fost sters din dealerShip-ul cu id-ul " + id);
+
+        if (okDeleted == 0) {
+            throw new Exception("Nu exista angajat cu id-ul " + idToDelete);
+        } else {
+            String new_angajati = "";
+            if (parts[0].equals("") && parts.length==1) {
+                new_angajati = "0";
+            }else {
+                for (int i = 0; i < parts.length; i++) {
+                    if (!parts[i].equals("")) {
+                        new_angajati += parts[i] + ",";
+                    }
+                }
+            }
+            String new_angajati_added = new_angajati.substring(0, new_angajati.length() - 1);
+            dealerShipRepoVar.updateAngajatiFromDealerShipByID(id, new_angajati_added);
         }
     }
 }

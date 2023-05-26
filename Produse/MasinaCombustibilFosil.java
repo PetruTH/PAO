@@ -5,13 +5,13 @@ import java.util.Objects;
 public class MasinaCombustibilFosil extends Masina{
     private int capacitateMotor;
     private String tipCombustibil;
-
+    private static String tip = "1";
     public MasinaCombustibilFosil(){
         super();
 
     }
-    public MasinaCombustibilFosil(String serieFabricatie, int pret, String marca, String tip, int putere, int vitezaMaxima, int masa, int capacitateMotor, String tipCombustibil) {
-        super(serieFabricatie, pret, marca, tip, putere, vitezaMaxima, masa);
+    public MasinaCombustibilFosil(int serieFabricatie, int pret, String marca, int id_catre_client, int idDS, String tip, int putere, int vitezaMaxima, int masa, int capacitateMotor, String tipCombustibil) {
+        super(serieFabricatie, pret, marca,id_catre_client, idDS, tip, putere, vitezaMaxima, masa);
         this.capacitateMotor = capacitateMotor;
         this.tipCombustibil = tipCombustibil;
     }
@@ -80,6 +80,9 @@ public class MasinaCombustibilFosil extends Masina{
                 '}';
     }
 
+    public String getTip() {
+        return tip;
+    }
     @Override
     public String Garantie() {
         return "20 ani";

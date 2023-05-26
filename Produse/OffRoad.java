@@ -9,8 +9,8 @@ public abstract class OffRoad extends Produse{
     public OffRoad(){
         super();
     }
-    public OffRoad(String serieFabricatie, int pret, String marca, String terenSuportat, int nivelDeSiguranta) {
-        super(serieFabricatie, pret, marca);
+    public OffRoad(int serieFabricatie, int pret, String marca, int id_catre_client, int idDS, String terenSuportat, int nivelDeSiguranta) {
+        super(serieFabricatie, pret, marca, id_catre_client, idDS);
         this.terenSuportat = terenSuportat;
         this.nivelDeSiguranta = nivelDeSiguranta;
     }

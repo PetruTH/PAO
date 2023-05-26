@@ -4,12 +4,12 @@ import java.util.Objects;
 
 public class MasinaElectrica extends Masina{
     private int autonomie;
-
+    private static String tip = "2";
     public MasinaElectrica(){
         super();
     }
-    public MasinaElectrica(String serieFabricatie, int pret, String marca, String tip, int putere, int vitezaMaxima, int masa, int autonomie) {
-        super(serieFabricatie, pret, marca, tip, putere, vitezaMaxima, masa);
+    public MasinaElectrica(int serieFabricatie, int pret, String marca, int id_catre_client, int idDS, String tip, int putere, int vitezaMaxima, int masa, int autonomie) {
+        super(serieFabricatie, pret, marca,id_catre_client,idDS, tip, putere, vitezaMaxima, masa);
         this.autonomie = autonomie;
     }
 
@@ -64,6 +64,10 @@ public class MasinaElectrica extends Masina{
                 ", pret=" + pret +
                 ", marca='" + marca + '\'' +
                 '}';
+    }
+
+    public String getTip() {
+        return tip;
     }
 
     @Override

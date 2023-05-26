@@ -5,41 +5,31 @@ import java.util.Objects;
 import java.util.Scanner;
 
 public class Client extends Persoana{
-    private Produse[] prod;
-    private String nrContact;
+    private String prod;
+//    produse devine list de integer si tine id uri de produse pe care le iei cu get prod by id
 
     public Client(){
         super();
-        this.prod = new Produse[]{};
-        this.nrContact = "";
+        this.prod = "";
+        this.id = 0;
     }
-    public Client(String nume, String mail, int varsta, Produse[] prod, String nrContact) {
-        super(nume, mail, varsta);
+    public Client(int id, String nume, String mail, int varsta, int id_dealership, String prod) {
+        super(id, nume, mail, varsta, id_dealership);
         this.prod = prod;
-        this.nrContact = nrContact;
     }
 
-    public Client(Persoana p, Produse[] prod, String nrContact) {
+    public Client(Persoana p, String prod, int nrContact) {
         super(p);
         this.prod = prod;
-        this.nrContact = nrContact;
     }
 
 
-    public Produse[] getProd() {
+    public String getProd() {
         return prod;
     }
 
-    public void setProd(Produse[] prod) {
+    public void setProd(String prod) {
         this.prod = prod;
-    }
-
-    public String getNrContact() {
-        return nrContact;
-    }
-
-    public void setNrContact(String nrContact) {
-        this.nrContact = nrContact;
     }
 
     @Override
@@ -48,23 +38,19 @@ public class Client extends Persoana{
         if (o == null || getClass() != o.getClass()) return false;
         if (!super.equals(o)) return false;
         Client client = (Client) o;
-        return prod.equals(client.prod) && nrContact.equals(client.nrContact);
+        return prod.equals(client.prod) && id==(client.id);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(super.hashCode(), prod, nrContact);
+        return Objects.hash(super.hashCode(), prod, id);
     }
 
     @Override
     public String toString() {
-        StringBuilder prodBuffer = new StringBuilder("");
-        for(int i=0; i < prod.length; i++){
-            prodBuffer.append(prod[i].toString()).append("\n");
-        }
         return "Client{" +
-                "prod=" + prodBuffer +
-                ", nrContact='" + nrContact + '\'' +
+                "prod=" + prod +
+                ", nrContact='" + id + '\'' +
                 ", nume='" + nume + '\'' +
                 ", mail='" + mail + '\'' +
                 ", varsta=" + varsta +

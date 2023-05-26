@@ -2,12 +2,14 @@ package FirmaDealerShip;
 import Persoana.*;
 import Sediu.*;
 import Produse.*;
+
+import java.sql.SQLException;
 import java.util.List;
 public interface dsInterface {
-    public DealerShip citesteDealerShip();
+    public DealerShip citesteDealerShip() throws Exception;
     public List<DealerShip> getDealerShips();
     public void stergeDealerShipDupaId(int id) throws Exception;
-    public DealerShip getDealerShipsDupaId(int id);
+    public DealerShip getDealerShipsDupaId(int id) throws SQLException;
     public void afiseazaDealerShipsClientiDupaId(int id) throws Exception;
     public void afiseazaDealerShipsAngajatiDupaId(int id) throws Exception;
     public void adaugaAngajatDealershipsDupaId(int id) throws Exception;

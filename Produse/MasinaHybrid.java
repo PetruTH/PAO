@@ -6,17 +6,19 @@ public class MasinaHybrid extends Masina{
     private int capacitateMotor;
     private String tipCombustibil;
     private int autonomieMotorElectric;
-
+    private static String tip = "3";
     public MasinaHybrid(){
         super();
     }
-    public MasinaHybrid(String serieFabricatie, int pret, String marca, String tip, int putere, int vitezaMaxima, int masa, int capacitateMotor, String tipCombustibil, int autonomieMotorElectric) {
-        super(serieFabricatie, pret, marca, tip, putere, vitezaMaxima, masa);
+    public MasinaHybrid(int serieFabricatie, int pret, String marca, int id_catre_client, int idDS, String tip, int putere, int vitezaMaxima, int masa, int capacitateMotor, String tipCombustibil, int autonomieMotorElectric) {
+        super(serieFabricatie, pret, marca,id_catre_client, idDS, tip, putere, vitezaMaxima, masa);
         this.capacitateMotor = capacitateMotor;
         this.tipCombustibil = tipCombustibil;
         this.autonomieMotorElectric = autonomieMotorElectric;
     }
-
+    public String getTip() {
+        return tip;
+    }
     public MasinaHybrid(Produse p, String tip, int putere, int vitezaMaxima, int masa, int capacitateMotor, String tipCombustibil, int autonomieMotorElectric) {
         super(p, tip, putere, vitezaMaxima, masa);
         this.capacitateMotor = capacitateMotor;

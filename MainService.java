@@ -1,17 +1,20 @@
 import Persoana.*;
 import Produse.*;
 
+import java.sql.SQLException;
 import java.util.Map;
 import java.util.Scanner;
 import Sediu.*;
 import FirmaDealerShip.*;
 public class MainService {
-    private ServiceAngajat AngajatService = ServiceAngajat.getInstance();
-    private ServiceClient ClientService = ServiceClient.getInstance();
-    private ServiceProdus ProdusService = ServiceProdus.getInstance();
-    private ServiceDS DSservice = ServiceDS.getInstance();
-    private ServiceSediu SediuService = ServiceSediu.getInstance();
+    private ServiceAngajat AngajatService = new ServiceAngajat();
+    private ServiceClient ClientService = new ServiceClient();
+    private ServiceProdus ProdusService = new ServiceProdus();
+    private ServiceDS DSservice = new ServiceDS();
+    private ServiceSediu SediuService = new ServiceSediu();
     private Scanner scanner = new Scanner(System.in);
+    private CSVService csvService = CSVService.getInstance();
+
     private static MainService instance;
 
     private MainService(){}
@@ -29,7 +32,7 @@ public class MainService {
         System.out.println(" 2 - Exit");
     }
 
-    public void MeniuPersoane(){
+    public void MeniuPersoane() throws SQLException {
         while(true){
             printMenuPersoane();
             int opt;
@@ -95,9 +98,11 @@ public class MainService {
                 }else if(idCautat > AngajatService.getAngajati().size()){
                     System.out.println("Ati introdus un id prea mare");
                 }else {
-                    if (AngajatService.getAngajatByID(idCautat) != null)
-                        System.out.println(AngajatService.getAngajatByID(idCautat));
-                    else System.out.println("Angajatul cu ID ul furnizat nu exista!");
+//                    if (AngajatService.getAngajatByID(idCautat) != null)
+//                        System.out.println(AngajatService.getAngajatByID(idCautat));
+//                    else System.out.println("Angajatul cu ID ul furnizat nu exista!");
+//                }
+                    System.out.println("de fixat");
                 }
             }else if (opt == 2) {
                 AngajatService.getAngajati().add(AngajatService.citesteAngajat());
@@ -127,7 +132,7 @@ public class MainService {
         System.out.println(" 5 - Adauga mai multe produse pt un client identificat prin numarul de telefon");
         System.out.println(" 6 - Exit");
     }
-    public void MeniuClient(){
+    public void MeniuClient() throws SQLException {
         while(true){
             printMeniuClient();
             int opt;
@@ -156,29 +161,31 @@ public class MainService {
                 System.out.println("Introduceti numarul de telefon al clientului pe care il cautati: ");
                 String nrCautat = scanner.next();
 
-                if (ClientService.afiseazaClientDupaNrContact(nrCautat) != null)
-                    System.out.println(ClientService.afiseazaClientDupaNrContact(nrCautat));
-                else
-                    System.out.println("Angajatul cu numarul ul furnizat nu exista!");
+//                if (ClientService.afiseazaClientDupaNrContact(nrCautat) != null)
+//                    System.out.println(ClientService.afiseazaClientDupaNrContact(nrCautat));
+//                else
+//                    System.out.println("Angajatul cu numarul ul furnizat nu exista!");
             }else if (opt == 2) {
                 ClientService.getClienti().add(ClientService.citesteClient());
             }else if (opt == 3) {
                 System.out.println("Introduceti numarul angajatului pe care doriti sa-l stergeti: ");
 
                 String nrCautat = scanner.next();
-                if(ClientService.afiseazaClientDupaNrContact(nrCautat) != null){
-                    ClientService.stergeClientDupaNrContact(nrCautat);
-                    System.out.println("Ati sters angajatul cu numarul: " + nrCautat);
-                }else
-                    System.out.println("Angajatul cu numarul ul furnizat nu exista!");
+//                if(ClientService.afiseazaClientDupaNrContact(nrCautat) != null){
+//                    ClientService.stergeClientDupaNrContact(nrCautat);
+//                    System.out.println("Ati sters angajatul cu numarul: " + nrCautat);
+//                }else
+//                    System.out.println("Angajatul cu numarul ul furnizat nu exista!");
             } else if (opt == 4) {
                 System.out.println("Introduceti numarul de telefon al clientului caruia doriti sa-i adaugati un produs: ");
                 String nrCautat = scanner.next();
-                ClientService.adaugaProdusPentruClient(nrCautat, ProdusService.citesteProdusInFunctieDeOpt());
+//                ClientService.adaugaProdusPentruClient(nrCautat, ProdusService.citesteProdusInFunctieDeOpt());
             }else if(opt==5){
-                System.out.println("Introduceti numarul de telefon al clientului caruia doriti sa-i adaugati un produs: ");
-                String nrCautat = scanner.next();
-                ClientService.atribuieProduseClientDupaNrContact(nrCautat);
+                System.out.println("Introduceti ID-ului clientului caruia doriti sa-i setati produse: ");
+                int nrCautat = scanner.nextInt();
+                System.out.println("Introduceti noile produse: ");
+                String prod = scanner.next();
+                ClientService.seteazaProduseClientuluiDupaID(nrCautat, prod);
             }else if(opt==6)
                 break;
         }
@@ -192,7 +199,7 @@ public class MainService {
         System.out.println(" 4 - Updateaza un produs");
         System.out.println(" 5 - Exit");
     }
-    public void MeniuProdus() {
+    public void MeniuProdus() throws SQLException {
         while (true) {
             printMenuProdus();
             int opt;
@@ -214,17 +221,17 @@ public class MainService {
                 }
             } else if (opt == 1) {
                 System.out.println("Introduceti seria de fabricatie a produsului pe care doriti sa-l cautati: ");
-                String seriedeFabricatie = scanner.next();
-                System.out.println(ProdusService.getProdusBySeriedeFabricatie(seriedeFabricatie));
+                int seriedeFabricatie = scanner.nextInt();
+//                System.out.println(ProdusService.getProdusBySeriedeFabricatie(seriedeFabricatie));
             } else if (opt == 2) {
                 ProdusService.getProduse().add(ProdusService.citesteProdusInFunctieDeOpt());
             } else if (opt == 3) {
                 System.out.println("Introduceti seria de fabricatie a produsului pe care doriti sa-l stergeti: ");
-                String seriedeFabricatie = scanner.next();
+                int seriedeFabricatie = scanner.nextInt();
                 ProdusService.deleteProdusBySeriedeFabricatie(seriedeFabricatie);
             } else if (opt == 4) {
                 System.out.println("Introduceti seria de fabricatie a produsului pe care doriti sa-l modificati: ");
-                String seriedeFabricatie = scanner.next();
+                int seriedeFabricatie = scanner.nextInt();
                 ProdusService.updateProdusBySeriedeFabricatie(seriedeFabricatie);
             } else if (opt == 5) {
                 break;
@@ -241,52 +248,52 @@ public class MainService {
         System.out.println(" 4 - Exit");
     }
 
-    public void meniuSediu(){
-        while(true) {
-            printMeniuSediu();
-            int opt;
-            while (true) {
-                String line = scanner.nextLine();
-                try {
-                    opt = Integer.parseInt(line);
-                    if (opt >= 0 && opt <= 5) {
-                        break;
-                    } else {
-                        System.out.println("Enter a number between 0 and 5");
-                    }
-                } catch (Exception e) {
-                    System.out.println("Enter a number between 0 and 5");
-                }
-            }
-            if (opt == 0) {
-                int ok = 0;
-                for (Map.Entry<String, Integer> entry : SediuService.getSedii().entrySet()) {
-                    String key = entry.getKey();
-                    int value = entry.getValue();
-                    System.out.println(key + ": " + value);
-                    ok=+1;
-                }
-                if (ok == 0){
-                    System.out.println("Nu exista niciun sediu momentan!");
-                }
-            } else if (opt == 1) {
-                System.out.println("Introduceti locatia sediului pe care doriti sa-l cautati: ");
-                String locatie = scanner.next();
-                if (SediuService.afiseazaSediuDupaLocatie(locatie) != null)
-                    System.out.println(SediuService.afiseazaSediuDupaLocatie(locatie));
-
-            } else if (opt == 2) {
-                Sediu newSediu = SediuService.citesteSediu();
-                SediuService.getSedii().put(newSediu.getLocatie(), newSediu.getNrStocuri());
-            } else if (opt == 3) {
-                System.out.println("Introduceti locatia sediului pe care doriti sa-l stergeti: ");
-                String locatie = scanner.next();
-                SediuService.stergeSediu(locatie);
-            } else if (opt == 4) {
-                break;
-            }
-        }
-    }
+//    public void meniuSediu(){
+//        while(true) {
+//            printMeniuSediu();
+//            int opt;
+//            while (true) {
+//                String line = scanner.nextLine();
+//                try {
+//                    opt = Integer.parseInt(line);
+//                    if (opt >= 0 && opt <= 5) {
+//                        break;
+//                    } else {
+//                        System.out.println("Enter a number between 0 and 5");
+//                    }
+//                } catch (Exception e) {
+//                    System.out.println("Enter a number between 0 and 5");
+//                }
+//            }
+//            if (opt == 0) {
+//                int ok = 0;
+//                for (Map.Entry<String, Integer> entry : SediuService.getSedii().entrySet()) {
+//                    String key = entry.getKey();
+//                    int value = entry.getValue();
+//                    System.out.println(key + ": " + value);
+//                    ok=+1;
+//                }
+//                if (ok == 0){
+//                    System.out.println("Nu exista niciun sediu momentan!");
+//                }
+//            } else if (opt == 1) {
+//                System.out.println("Introduceti locatia sediului pe care doriti sa-l cautati: ");
+//                String locatie = scanner.next();
+//                if (SediuService.afiseazaSediuDupaLocatie(locatie) != null)
+//                    System.out.println(SediuService.afiseazaSediuDupaLocatie(locatie));
+//
+//            } else if (opt == 2) {
+//                Sediu newSediu = SediuService.citesteSediu();
+//                SediuService.getSedii().put(newSediu.getLocatie(), newSediu.getNrStocuri());
+//            } else if (opt == 3) {
+//                System.out.println("Introduceti locatia sediului pe care doriti sa-l stergeti: ");
+//                String locatie = scanner.next();
+//                SediuService.stergeSediu(locatie);
+//            } else if (opt == 4) {
+//                break;
+//            }
+//        }
+//    }
     //intai citesti produse, sediu si angajati
     //apoi incepi sa adaugi clienti (nu au voie sa aiba produse care nu s in lista de produse din dealership)
     //apoi crdu pe lista de dealershipuri
@@ -309,6 +316,7 @@ public class MainService {
     }
 
     public void meniuDealerShip() throws Exception {
+        this.csvService.addLine("Start app");
         while (true) {
             printMeniuDS();
             int opt;
@@ -334,6 +342,8 @@ public class MainService {
                 if (ok == 0) {
                     System.out.println("Nu exista niciun dealership momentan!");
                 }
+                this.csvService.addLine("Select all dealerships");
+
             } else if (opt == 1) {
                 System.out.println("Introduceti id-ul dealershipului pe care doriti sa-l cautati: ");
                 int id = scanner.nextInt();
@@ -345,8 +355,12 @@ public class MainService {
                     else {
                         System.out.println("Nu exista dealership cu acest id!");
                     }
+                this.csvService.addLine("Select dealership by id: " + id);
+
             }else if(opt==2){
                 DSservice.getDealerShips().add(DSservice.citesteDealerShip());
+                this.csvService.addLine("Added new dealership");
+
             } else if (opt==3) {
                 System.out.println("Introduceti id-ul dealershipului pe care doriti sa-l stergeti: ");
                 int id = scanner.nextInt();
@@ -355,14 +369,17 @@ public class MainService {
                 }catch (Exception e){
                     System.out.println("An error occurred: " + e.getMessage());
                 }
+                this.csvService.addLine("Deleted dealerships with id: " + id);
+
             } else if (opt==4) {
                 System.out.println("Introduceti id-ul dealershipului pe care doriti sa-i adaugati clienti: ");
                 int id = scanner.nextInt();
                 try {
-                    DSservice.citesteDealerShipClienti(id);
+                    DSservice.adaugaClientDealershipsDupaId(id);
                 } catch (Exception e) {
                     System.out.println("An error occurred: " + e.getMessage());
                 }
+                this.csvService.addLine("Added clients to dealership with id: " + id);
             } else if (opt == 5) {
                 int id=0;
                 System.out.println("Introduceti id-ul dealershipului: ");
@@ -374,6 +391,8 @@ public class MainService {
                 } catch (Exception e) {
                         System.out.println("An error occurred: " + e.getMessage());
                 }
+                this.csvService.addLine("Printed clients from dealership with id: " + id);
+
             }else if (opt == 7) {
                 int id=0;
                 System.out.println("Introduceti id-ul dealershipului: ");
@@ -384,6 +403,7 @@ public class MainService {
                 } catch (Exception e) {
                     System.out.println("An error occurred: " + e.getMessage());
                 }
+                this.csvService.addLine("Printed employees from dealership with id: " + id);
             }else if (opt == 6) {
                 int id=0;
                 System.out.println("Introduceti id-ul dealershipului: ");
@@ -393,6 +413,7 @@ public class MainService {
                 } catch (Exception e) {
                     System.out.println("An error occurred: " + e.getMessage());
                 }
+                this.csvService.addLine("Added employee to dealership with id: " + id);
             }else if (opt == 8) {
                 int id=0;
                 System.out.println("Introduceti id-ul dealershipului: ");
@@ -402,6 +423,7 @@ public class MainService {
                 }catch (Exception e){
                     System.out.println("An error occurred: " + e.getMessage());
                 }
+                this.csvService.addLine("Added products to dealership with id: " + id);
             }else if(opt==9){
                 int id=0;
                 System.out.println("Introduceti id-ul dealershipului: ");
@@ -411,6 +433,7 @@ public class MainService {
                 } catch (Exception e) {
                     System.out.println("An error occurred: " + e.getMessage());
                 }
+                this.csvService.addLine("Printed products from dealership with id: " + id);
             }else if (opt == 11) {
                 int id=0;
                 System.out.println("Introduceti id-ul dealershipului: ");
@@ -420,6 +443,7 @@ public class MainService {
                 } catch (Exception e) {
                     System.out.println("An error occurred: " + e.getMessage());
                 }
+
             }else if (opt == 10){
                 int id=0;
                 System.out.println("Introduceti id-ul dealershipului: ");
@@ -429,6 +453,7 @@ public class MainService {
                 } catch (Exception e) {
                     System.out.println("An error occurred: " + e.getMessage());
                 }
+                this.csvService.addLine("Deleted product from dealership with id: " + id);
 
             }else if (opt == 12) {
                 int id=0;
@@ -439,6 +464,7 @@ public class MainService {
                 } catch (Exception e) {
                     System.out.println("An error occurred: " + e.getMessage());
                 }
+                this.csvService.addLine("Deleted employee from dealership with id: " + id);
             }else if (opt == 13) {
                 int id=0;
                 System.out.println("Introduceti id-ul dealershipului: ");
@@ -448,7 +474,9 @@ public class MainService {
                 } catch (Exception e) {
                     System.out.println("An error occurred: " + e.getMessage());
                 }
+                this.csvService.addLine("Deleted client from dealership with id: " + id);
             }else if (opt == 14) {
+                this.csvService.addLine("Exit from app");
                 break;
             }
         }
